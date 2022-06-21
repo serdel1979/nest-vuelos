@@ -8,23 +8,33 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
-    
-    constructor(@InjectModel(USER.name) private readonly model: Model<IUser>){}
+
+    constructor(@InjectModel(USER.name) private readonly model: Model<IUser>) { }
 
 
-    async hashPassword(password:string):Promise<string>{
+    async hashPassword(password: string): Promise<string> {
         const salt = await bcrypt.genSalt(10);
-        return await bcrypt.hash(password,salt);
+        return await bcrypt.hash(password, salt);
     }
 
-    async create(userDTO: UserDTO): Promise<IUser>{
+    async create(userDTO: UserDTO): Promise<IUser> {
         const hash = await this.hashPassword(userDTO.password);
-        const newUser = new this.model({...userDTO, password: hash});
+        const newUser = new this.model({ ...userDTO, password: hash });
         return await newUser.save();
     }
 
-    async getUsers(): Promise<IUser[]>{
-          return await this.model.find();
+    async getUsers(): Promise<IUser[]> {
+        return await this.model.find();
     }
+
+    async getOne(id: string): Promise<IUser> {
+        return await this.model.findById(id);
+    }
+
+
+   
+
+
+
 
 }
