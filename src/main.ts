@@ -9,6 +9,6 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalInterceptors(new TomeOutInterceptor());
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();
