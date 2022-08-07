@@ -5,12 +5,14 @@ import { IFlight } from 'src/common/interfaces/flight.interface';
 import { FLIGHT } from 'src/common/models/models';
 import { FlightDTO } from './dto/flight.dto';
 import { PassengerDTO } from '../passenger/dto/passenger.dto';
+import { PassengerSchema } from '../passenger/schema/passenger.schema';
+import { PassengerService } from '../passenger/passenger.service';
 
 @Injectable()
 export class FlightService {
 
 
-    constructor(@InjectModel(FLIGHT.name) private readonly model: Model<IFlight>) { }
+    constructor(@InjectModel(FLIGHT.name) private readonly model: Model<IFlight>, private readonly passengerService: PassengerService) { }
 
     async create(flightDTO: FlightDTO): Promise<IFlight> {
         const newPassenger = new this.model({ ...flightDTO });
@@ -37,9 +39,10 @@ export class FlightService {
 
 
     async addPassenger(idFlight: string, passengerId: string): Promise<IFlight> {
+        const passenger = await this.passengerService.getOne(passengerId);
         return await this.model.findByIdAndUpdate(idFlight, {
             $addToSet: {
-                passengers: passengerId
+                passengers: passenger
             }
         }, { new: true }).populate('passengers');
     }

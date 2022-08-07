@@ -12,9 +12,18 @@ export class UserService {
     constructor(@InjectModel(USER.name) private readonly model: Model<IUser>) { }
 
 
+    async findByUserName(username: string){
+        return await this.model.findOne({username});
+    }
+
+
     async hashPassword(password: string): Promise<string> {
         const salt = await bcrypt.genSalt(10);
         return await bcrypt.hash(password, salt);
+    }
+
+    async checkPassword(password: string, passwordDB: string):Promise<boolean>{
+        return await bcrypt.compare(password,passwordDB);
     }
 
     async create(userDTO: UserDTO): Promise<IUser> {
@@ -33,6 +42,7 @@ export class UserService {
         return await this.model.findById(id).exec();
     }
 
+    
     async update(id: string, userDTO: UserDTO): Promise<IUser> {
         const hash = await this.hashPassword(userDTO.password);
         const user = {...userDTO, password: hash}
