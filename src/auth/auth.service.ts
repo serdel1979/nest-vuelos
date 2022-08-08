@@ -7,7 +7,7 @@ import { UserAuthDTO } from './dto/auth.dto';
 @Injectable()
 export class AuthService {
 
-    constructor(private readonly userService: UserService, private jwtService: JwtService){}
+    constructor(private readonly userService: UserService, private readonly jwtService: JwtService){}
 
     async signIn(userDto: UserAuthDTO){
         const { username, password } = userDto;
@@ -18,14 +18,13 @@ export class AuthService {
         const checkPassword = await compare(password,userfind.password);
         if(!checkPassword) throw new HttpException('Usuario o clave incorrecto',403); 
 
-        const payload = {id:userfind._id, username:userfind.username}
-        console.log("payload ",payload);
-  
-        const token = await this.jwtService.signAsync(payload);
+        const payload = {username:userfind.username, sub: userfind._id}
+
+        const token = this.jwtService.sign(payload);
       
         console.log("token",token);
         const data = {
-            user: userfind.username,
+            user: userfind,
             token,
         }  
         return data;
