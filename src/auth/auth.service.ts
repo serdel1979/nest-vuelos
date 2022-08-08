@@ -12,7 +12,6 @@ export class AuthService {
     async signIn(userDto: UserAuthDTO){
         const { username, password } = userDto;
         const userfind = await this.userService.findByUserName(username);
-        console.log("usr encontrado ",userfind);
         if(!userfind) throw new HttpException('Usuario o clave incorrecto',403);
 
         const checkPassword = await compare(password,userfind.password);
@@ -22,7 +21,6 @@ export class AuthService {
 
         const token = this.jwtService.sign(payload);
       
-        console.log("token",token);
         const data = {
             user: userfind,
             token,

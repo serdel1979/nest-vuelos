@@ -5,17 +5,15 @@ import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategys/jwtstrategy';
+import { jwtConstants } from 'src/config/constants';
 
 @Module({
   imports:[
     UserModule, 
     PassportModule, 
     JwtModule.register({
-        secret: "JWTclav3s3cr3t4@Api",
-        signOptions:{
-          expiresIn: process.env.EXPIRES_IN,
-          audience: process.env.APP_URL,
-        },
+        secret: jwtConstants.secret,
+        signOptions:{expiresIn: "48h"},
     })
   ],
   controllers: [AuthController],
