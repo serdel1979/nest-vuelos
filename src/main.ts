@@ -13,6 +13,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const options = new DocumentBuilder()
+  .addBearerAuth()
   .setTitle('Api vuelos v1')
   .setDescription('Vuelos programados')
   .setVersion('1.0.0')

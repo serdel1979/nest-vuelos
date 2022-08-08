@@ -38,8 +38,7 @@ export class FlightService {
     }
 
 
-    async addPassenger(idFlight: string, passengerId: string): Promise<IFlight> {
-        const passenger = await this.passengerService.getOne(passengerId);
+    async addPassenger(idFlight: string, passenger: any): Promise<IFlight> {
         return await this.model.findByIdAndUpdate(idFlight, {
             $addToSet: {
                 passengers: passenger

@@ -1,10 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, HttpException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, HttpException, UseGuards } from '@nestjs/common';
 import { FlightDTO } from './dto/flight.dto';
 import { FlightService } from './flight.service';
 import { PassengerService } from '../passenger/passenger.service';
 import { PassengerDTO } from '../passenger/dto/passenger.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guards';
 
+
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags('flights')
 @Controller('api/v1/flight')
 export class FlightController {
@@ -43,7 +47,7 @@ export class FlightController {
         if(!passenger){
             throw new HttpException('Passenger not found',404);
         }
-        return this.flightService.addPassenger(flightId,passengerId);
+        return this.flightService.addPassenger(flightId,passenger);
     }
 
 }
